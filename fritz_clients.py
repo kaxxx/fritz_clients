@@ -20,7 +20,7 @@ def fmt(val: object, fallback: str = "-") -> str:
 
 def print_hosts(hosts: List[Dict]) -> None:
     # Spaltenbreiten dynamisch bestimmen
-    headers = ["#", "IP", "Name", "MAC", "Status", "Interface", "Lease(s)"]
+    headers = ["#", "IP", "Name", "Status", "Interface"]
     rows = []
     for i, h in enumerate(hosts, start=1):
         status = "active" if h.get("status") else "-"
@@ -28,10 +28,10 @@ def print_hosts(hosts: List[Dict]) -> None:
             str(i),
             fmt(h.get("ip")),
             fmt(h.get("name")),
-            fmt(h.get("mac")),
+            #fmt(h.get("mac")),
             status,
             fmt(h.get("interface_type")),
-            fmt(h.get("lease_time_remaining")),
+            #fmt(h.get("lease_time_remaining")),
         ])
 
     widths = [len(h) for h in headers]
@@ -52,8 +52,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description="Listet angemeldete/aktive FRITZ!Box Clients via fritzconnection (TR-064)."
     )
-    ap.add_argument("-i", "--ip", default=os.getenv("FRITZ_ADDRESS", "169.254.1.1"),
-                    help="FRITZ!Box IP/Hostname (default: env FRITZ_ADDRESS oder 169.254.1.1)")
+    ap.add_argument("-i", "--ip", default=os.getenv("FRITZ_ADDRESS", "192.168.2.1"),
+                    help="FRITZ!Box IP/Hostname (default: env FRITZ_ADDRESS oder 192.168.2.1)")
     ap.add_argument("-u", "--user", default=os.getenv("FRITZ_USERNAME"),
                     help="FRITZ!Box Benutzer (default: env FRITZ_USERNAME)")
     ap.add_argument("-p", "--password", default=os.getenv("FRITZ_PASSWORD"),
