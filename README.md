@@ -23,7 +23,7 @@ pip install --upgrade pip
 pip install fritzconnection==1.15.0
 ```
 
-Klonen oder kopieren Sie dieses Repository lokal. Ein Build ist nicht erforderlich; das Skript kann direkt ausgeführt werden.
+Klone oder kopiere dieses Repository lokal. Das Skript kann direkt ausgeführt werden.
 
 Verwendung
 Das Hauptskript ist fritz_clients.py.
@@ -59,7 +59,7 @@ Mehrband-Verbindungen werden mit "+" verknüpft, z. B. "2.4 GHz+5 GHz".
 
 Hinweise und Troubleshooting
 - Falls die Bibliothek fehlt, installieren Sie sie wie oben beschrieben (z. B. `pip install fritzconnection==1.15.0`).
-- Stellen Sie sicher, dass TR‑064 auf der FRITZ!Box aktiviert ist und der Benutzer ausreichende Rechte besitzt.
+- Stelle sicher, dass TR‑064 auf der FRITZ!Box aktiviert ist und der Benutzer ausreichende Rechte besitzt.
 - Bei Zertifikats-/TLS‑Fehlern: Testweise ohne `--tls` starten oder Zertifikat korrekt einrichten.
 - Unterschiedliche FRITZ!OS‑Versionen liefern teils abweichende Keys. Dieses Tool versucht die relevanten Felder robust zu erkennen; fehlende Band‑Informationen werden als "-" angezeigt.
 
