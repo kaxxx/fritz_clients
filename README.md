@@ -10,7 +10,7 @@ Funktionen
 
 Voraussetzungen
 - Python 3.8+
-- Paket fritzconnection (getestet mit 1.15.0)
+- Paket fritzconnection (getestet mit 1.15.0) https://fritzconnection.readthedocs.io/en/1.15.0/sources/fritzconnection_api.html
 - Aktivierte TR‑064‑Schnittstelle der FRITZ!Box (Heimnetz → Netzwerk → Netzwerkeinstellungen)
 
 Installation
