@@ -1,7 +1,6 @@
 import itertools
 from typing import Dict, Tuple, Set, Any
 
-from utils import fmt
 from bands import _extract_frequency_band, _band_label, _band_order
 
 
@@ -16,8 +15,10 @@ def get_wlan_bands_by_mac(fw: Any) -> Dict[str, str]:
     # Lazy-Import, um ImportError außerhalb des CLI-Entry-Points zu vermeiden
     try:
         from fritzconnection.core.exceptions import FritzServiceError  # type: ignore
-    except Exception:  # pragma: no cover - sollte im regulären Aufruf durch main() vorhanden sein
-        FritzServiceError = Exception  # Fallback, um nicht beim Import zu scheitern
+    except ImportError:  # pragma: no cover - im regulären CLI-Aufruf vorhanden
+        # Schlanker Fallback-Typ, falls fritzconnection nicht installiert ist
+        class FritzServiceError(Exception):
+            pass
 
     bands_by_mac: Dict[str, Set[str]] = {}
 
@@ -33,8 +34,10 @@ def get_wlan_bands_by_mac(fw: Any) -> Dict[str, str]:
         for entry in wlan_hosts:
             if not entry.get("status"):
                 continue  # nur aktive WLAN-Clients
-            mac = fmt(entry.get("mac")).lower()
-            if mac == "-":
+            # Logik-Normalisierung ohne Anzeige-Fallback
+            mac_raw = entry.get("mac")
+            mac = str(mac_raw).strip().lower() if mac_raw else ""
+            if not mac:
                 continue
             bands_by_mac.setdefault(mac, set()).add(band)
 

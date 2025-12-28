@@ -2,12 +2,10 @@
 import os
 import sys
 import argparse
-import itertools
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict
 
 try:
     from fritzconnection import FritzConnection
-    from fritzconnection.core.exceptions import FritzServiceError
     from fritzconnection.lib.fritzhosts import FritzHosts
     from fritzconnection.lib.fritzwlan import FritzWLAN
 except ImportError:
@@ -15,7 +13,7 @@ except ImportError:
     sys.exit(2)
 
 
-from utils import fmt
+from utils import format_value
 from bands import _band_order
 from wlan_helpers import get_wlan_bands_by_mac
 
@@ -27,12 +25,12 @@ def print_hosts(hosts: List[Dict]) -> None:
         status = "active" if h.get("status") else "-"
         rows.append([
             str(i),
-            fmt(h.get("band")),
-            fmt(h.get("ip")),
-            fmt(h.get("name")),
+            format_value(h.get("band")),
+            format_value(h.get("ip")),
+            format_value(h.get("name")),
             status,
-            fmt(h.get("interface_type")),
-            fmt(h.get("mac")),
+            format_value(h.get("interface_type")),
+            format_value(h.get("mac")),
         ])
 
     widths = [len(h) for h in headers]
@@ -82,24 +80,27 @@ def main() -> int:
 
     # Band je Host bestimmen
     for h in hosts:
-        mac = fmt(h.get("mac")).lower()
+        # Logik-Normalisierung ohne Anzeige-Fallback
+        mac_raw = h.get("mac")
+        mac = str(mac_raw).strip().lower() if mac_raw else ""
         band = wlan_band_by_mac.get(mac)
         if not band:
             # simple Heuristik für kabelgebunden / unknown
-            it = fmt(h.get("interface_type")).lower()
+            it_raw = h.get("interface_type")
+            it = str(it_raw).strip().lower() if it_raw else ""
             if "ethernet" in it or it == "lan":
                 band = "LAN"
             else:
                 band = "-"
         h["band"] = band
 
-    # Sortierschlüssel einmalig je Host berechnen (vermeidet wiederholte fmt()/lower()-Aufrufe)
+    # Sortierschlüssel einmalig je Host berechnen (vermeidet wiederholte format_value()/lower()-Aufrufe)
     for h in hosts:
-        _band = fmt(h.get("band"))
+        _band = format_value(h.get("band"))
         h["_sbo"] = _band_order(_band)
         h["_sband"] = _band
-        h["_sname"] = fmt(h.get("name")).lower()
-        h["_sip"] = fmt(h.get("ip"))
+        h["_sname"] = format_value(h.get("name")).lower()
+        h["_sip"] = format_value(h.get("ip"))
 
     # Sortieren: erst Band, dann Name, dann IP
     hosts = sorted(
